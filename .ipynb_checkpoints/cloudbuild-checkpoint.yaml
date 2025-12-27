@@ -1,0 +1,26 @@
+steps:
+#  Build Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    [
+      'build',
+      '-t',
+      'us-central1-docker.pkg.dev/$PROJECT_ID/mlops-repo/churn:latest',
+      '.'
+    ]
+
+# Push image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    [
+      'push',
+      'us-central1-docker.pkg.dev/$PROJECT_ID/mlops-repo/churn:latest'
+    ]
+
+# Run pipeline
+- name: 'us-central1-docker.pkg.dev/$PROJECT_ID/mlops-repo/churn:latest'
+  entrypoint: 'python'
+  args: ['pipeline/run_pipeline.py']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
